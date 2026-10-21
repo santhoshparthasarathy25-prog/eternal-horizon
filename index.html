@@ -1,137 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#02040a">
-<meta name="description" content="Eternal Horizon — animated tropical night beach">
-<link rel="manifest" href="./manifest.webmanifest">
 <title>Eternal Horizon</title>
 <style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02040a;color:#f8fafc}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02040a;color:#fff;font-family:system-ui,Arial,sans-serif}
 #scene{position:fixed;inset:0;width:100%;height:100%;display:block}
-#ui{position:fixed;z-index:3;inset:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);pointer-events:none}
-.panel{pointer-events:auto;position:absolute;right:12px;top:12px;width:min(360px,calc(100vw - 24px));max-height:calc(100% - 24px);overflow:auto;padding:15px;border:1px solid #38bdf855;border-radius:16px;background:#07101eec;box-shadow:0 12px 36px #0009;display:none}
-.panel.open{display:block}
-.heading{color:#7dd3fc;font-weight:750;font-size:15px}
-.muted{color:#aab9ca;font-size:12px;line-height:1.45}
-button,select,input{font:inherit}
-button{border:0;border-radius:11px;padding:10px 12px;background:#087db8;color:white;font-weight:650;cursor:pointer}
-button.secondary{background:transparent;color:#cbd5e1;text-decoration:underline;font-size:12px}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #7dd3fc;outline-offset:2px}
-.row{margin:11px 0}
-.row label{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#d7e2ef;margin-bottom:5px}
-.row input[type=range]{width:100%;accent-color:#38bdf8}
+#hint{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:2;background:#07101ecc;padding:8px 12px;border-radius:10px;font-size:12px;text-align:center;max-width:90vw}
+#setup{position:fixed;z-index:3;bottom:18px;left:50%;transform:translateX(-50%);width:min(380px,calc(100% - 24px));padding:16px;background:#07101ef2;border:1px solid #38bdf866;border-radius:16px;text-align:center}
+#setup h2{margin:0 0 8px;color:#7dd3fc}
+#setup p{font-size:12px;line-height:1.5;color:#cbd5e1}
+button,select{font:inherit}
+button{background:#087db8;color:white;border:0;border-radius:10px;padding:10px 12px;cursor:pointer}
+button.secondary{background:transparent;color:#cbd5e1}
+#setup button{width:100%;margin:4px 0}
+#panel{display:none;position:fixed;z-index:4;top:12px;right:12px;width:min(350px,calc(100% - 24px));max-height:calc(100% - 24px);overflow:auto;padding:15px;border:1px solid #38bdf866;border-radius:16px;background:#07101ef5;box-shadow:0 12px 36px #0009}
+#panel.open{display:block}
+.heading{font-weight:800;color:#7dd3fc}
+.muted{font-size:12px;color:#b6c5d7;line-height:1.5}
+.row{margin:12px 0}
+.row label{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:6px}
+input[type=range]{width:100%;accent-color:#38bdf8}
 select{width:100%;padding:8px;background:#1e293b;color:white;border:1px solid #475569;border-radius:8px}
-#setup{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(390px,calc(100vw - 28px));padding:16px;border:1px solid #38bdf866;border-radius:17px;background:#07101ef2;text-align:center;box-shadow:0 12px 36px #000b;pointer-events:auto}
-#setup h2{margin:0 0 6px;color:#7dd3fc;font-size:16px}
-#setup p{font-size:12px;line-height:1.5;color:#cbd5e1;margin:0 0 12px}
-#setup button{width:100%;margin-bottom:7px}
+#status{font-size:11px;color:#a7f3d0;overflow-wrap:anywhere;line-height:1.5}
 #photoInput{display:none}
-#hint{position:absolute;left:50%;top:12px;transform:translateX(-50%);max-width:calc(100vw - 24px);padding:8px 12px;border-radius:10px;background:#07101ebd;color:#dbeafe;font-size:11px;text-align:center;pointer-events:none}
-#status{font-family:ui-monospace,monospace;font-size:11px;line-height:1.5;padding:9px;background:#0f172a;border-radius:9px;overflow-wrap:anywhere;white-space:pre-wrap}
 </style>
 </head>
 <body>
 
-<canvas id="scene" aria-label="Animated tropical beach scene"></canvas>
+<canvas id="scene"></canvas>
+<div id="hint">Double-tap the screen to open settings</div>
 
-<div id="ui">
-  <div id="hint">Double-tap the scene to open settings</div>
+<section id="setup">
+  <h2>Eternal Horizon</h2>
+  <p>Your animated tropical night beach. Tap below to start the generated scene. Reference photos are optional.</p>
+  <button id="start">Start Eternal Horizon</button>
+  <button id="choosePhotos" class="secondary">Choose 2 reference photos</button>
+  <input id="photoInput" type="file" accept="image/*" multiple>
+</section>
 
-  <section id="setup">
-    <h2>Eternal Horizon</h2>
-    <p>Choose the Night Beach photo first and the Milky Way photo second. Photos are saved in this browser on this device. Or continue with the generated scene.</p>
-    <input id="photoInput" type="file" accept="image/*" multiple>
-    <button id="choosePhotos">Choose 2 reference photos</button>
-    <button id="useGenerated" class="secondary">Use generated beach</button>
-  </section>
+<section id="panel">
+  <div class="heading">ETERNAL HORIZON</div>
+  <p class="muted">Double-tap outside this panel to close settings.</p>
+  <div id="status" class="row">Starting graphics…</div>
 
-  <section id="panel" class="panel" aria-label="Scene settings">
-    <div class="heading">ETERNAL HORIZON</div>
-    <div class="muted">Double-tap outside this panel to close it.</div>
-    <div id="status" class="row">Starting graphics…</div>
-
-    <div class="row">
-      <label><span>Use local time</span><input id="realTime" type="checkbox" checked></label>
-    </div>
-
-    <div class="row">
-      <label><span>Manual time</span><span id="timeLabel">22:00</span></label>
-      <input id="time" type="range" min="0" max="23.99" step=".02" value="22">
-    </div>
-
-    <div class="row">
-      <label><span>Animation speed</span><span id="speedLabel">1×</span></label>
-      <input id="speed" type="range" min="1" max="60" value="1">
-    </div>
-
-    <div class="row">
-      <label><span>Pause animation</span><input id="paused" type="checkbox"></label>
-    </div>
-
-    <div class="row">
-      <label><span>Star density</span><span id="starsLabel">1.0</span></label>
-      <input id="stars" type="range" min="0" max="1.5" step=".1" value="1">
-    </div>
-
-    <div class="row">
-      <label><span>Ocean waves</span><span id="wavesLabel">1.0</span></label>
-      <input id="waves" type="range" min="0" max="1.5" step=".1" value="1">
-    </div>
-
-    <div class="row">
-      <label><span>Moon phase</span><span id="phaseLabel">0.35</span></label>
-      <input id="phase" type="range" min="0" max="1" step=".01" value=".35">
-    </div>
-
-    <div class="row">
-      <label><span>Rendering quality</span></label>
-      <select id="quality">
-        <option value=".65">Battery saver</option>
-        <option value="1" selected>Balanced</option>
-        <option value="1.35">High (may heat phone)</option>
-      </select>
-    </div>
-
-    <button id="changePhotos">Change reference photos</button>
-  </section>
-</div>
+  <div class="row">
+    <label><span>Use local time</span><input id="realTime" type="checkbox" checked></label>
+  </div>
+  <div class="row">
+    <label><span>Manual time</span><span id="timeLabel">22:00</span></label>
+    <input id="time" type="range" min="0" max="23.99" step=".02" value="22">
+  </div>
+  <div class="row">
+    <label><span>Animation speed</span><span id="speedLabel">1×</span></label>
+    <input id="speed" type="range" min="0" max="5" step=".1" value="1">
+  </div>
+  <div class="row">
+    <label><span>Pause animation</span><input id="paused" type="checkbox"></label>
+  </div>
+  <div class="row">
+    <label><span>Star density</span><span id="starsLabel">1.0</span></label>
+    <input id="stars" type="range" min="0" max="2" step=".1" value="1">
+  </div>
+  <div class="row">
+    <label><span>Ocean waves</span><span id="wavesLabel">1.0</span></label>
+    <input id="waves" type="range" min="0" max="2" step=".1" value="1">
+  </div>
+  <div class="row">
+    <label><span>Moon phase</span><span id="phaseLabel">0.35</span></label>
+    <input id="phase" type="range" min="0" max="1" step=".01" value=".35">
+  </div>
+  <div class="row">
+    <label><span>Rendering quality</span></label>
+    <select id="quality">
+      <option value=".55">Battery saver</option>
+      <option value=".8" selected>Balanced</option>
+      <option value="1">High</option>
+    </select>
+  </div>
+  <button id="changePhotos">Choose reference photos</button>
+</section>
 
 <script>
 (() => {
-'use strict';
+"use strict";
 
-const canvas = document.querySelector('#scene');
-const setup = document.querySelector('#setup');
-const panel = document.querySelector('#panel');
-const statusBox = document.querySelector('#status');
-const photoInput = document.querySelector('#photoInput');
+const canvas = document.getElementById("scene");
+const gl = canvas.getContext("webgl2", {
+  alpha: false,
+  antialias: false,
+  powerPreference: "default"
+});
 const $ = id => document.getElementById(id);
 
-let gl = null;
-let program = null;
-let textures = [];
-let imageReady = 0;
-let lastFrame = 0;
+let program;
+let lastTime = 0;
 let elapsed = 0;
 let lastTap = 0;
-let images = [null, null];
-let db = null;
+let textures = [];
+let photoCount = 0;
 let failed = false;
 
-const vertexSource = `#version 300 es
+const vertexShader = `#version 300 es
 in vec2 aPosition;
 out vec2 vUv;
-
-void main() {
-    vUv = aPosition * 0.5 + 0.5;
-    gl_Position = vec4(aPosition, 0.0, 1.0);
+void main(){
+  vUv = aPosition * 0.5 + 0.5;
+  gl_Position = vec4(aPosition, 0.0, 1.0);
 }`;
 
-const fragmentSource = `#version 300 es
+const fragmentShader = `#version 300 es
 precision highp float;
 
 in vec2 vUv;
@@ -147,473 +128,369 @@ uniform sampler2D uBeach;
 uniform sampler2D uGalaxy;
 uniform float uHasPhotos;
 
-float hash(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 45.32);
-    return fract(p.x * p.y);
+float hash(vec2 p){
+  p = fract(p * vec2(123.34,456.21));
+  p += dot(p,p+45.32);
+  return fract(p.x*p.y);
 }
 
-float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
-
-    return mix(
-        mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
-        mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
-        f.y
-    );
+float noise(vec2 p){
+  vec2 i=floor(p);
+  vec2 f=fract(p);
+  f=f*f*(3.0-2.0*f);
+  float a=hash(i);
+  float b=hash(i+vec2(1.0,0.0));
+  float c=hash(i+vec2(0.0,1.0));
+  float d=hash(i+vec2(1.0,1.0));
+  return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
 }
 
-void main() {
-    float aspect = uResolution.x / max(uResolution.y, 1.0);
-    vec2 uv = vUv;
-    float horizon = 0.475;
+void main(){
+  vec2 uv=vUv;
+  float aspect=uResolution.x/max(uResolution.y,1.0);
+  float horizon=0.47;
 
-    float day = max(
-        0.0,
-        min(1.0, (sin((uHour - 6.0) * 3.14159 / 12.0) + 0.05) * 0.75)
-    );
-    float night = 1.0 - day;
+  float day=clamp((sin((uHour-6.0)*3.14159265/12.0)+0.12)*0.65,0.0,1.0);
+  float night=1.0-day;
 
-    vec3 sky = mix(
-        vec3(0.025, 0.055, 0.12),
-        vec3(0.10, 0.26, 0.44),
-        pow(max(0.0, uv.y - horizon) / (1.0 - horizon), 0.7)
-    );
+  float skyHeight=clamp((uv.y-horizon)/(1.0-horizon),0.0,1.0);
 
-    vec3 dawn = mix(
-        vec3(0.34, 0.12, 0.18),
-        vec3(0.95, 0.43, 0.19),
-        pow(max(0.0, uv.y - horizon) / (1.0 - horizon), 0.65)
-    );
+  vec3 sky=mix(
+    vec3(0.008,0.018,0.065),
+    vec3(0.025,0.12,0.24),
+    pow(skyHeight,0.8)
+  );
 
-    float sunrise = clamp(1.0 - abs(uHour - 6.0) / 2.0, 0.0, 1.0);
-    float sunset = clamp(1.0 - abs(uHour - 18.0) / 2.0, 0.0, 1.0);
+  vec3 daylight=mix(
+    vec3(0.95,0.40,0.22),
+    vec3(0.25,0.60,0.85),
+    skyHeight
+  );
 
-    sky = mix(sky, dawn, (sunrise + sunset) * 0.8);
-    sky = mix(sky, vec3(0.42, 0.70, 0.91), day * 0.8);
+  float dawn=clamp(1.0-abs(uHour-6.0)/2.0,0.0,1.0);
+  float dusk=clamp(1.0-abs(uHour-18.0)/2.0,0.0,1.0);
+  sky=mix(sky,daylight,(dawn+dusk)*0.85);
+  sky=mix(sky,vec3(0.22,0.48,0.68),day*0.9);
 
-    float ocean = 1.0 - smoothstep(horizon - 0.015, horizon + 0.01, uv.y);
-    float sandEdge = 0.24 + (horizon - uv.y) * 1.55;
+  float water=1.0-smoothstep(horizon-0.003,horizon+0.003,uv.y);
+  float sandLine=0.30+(horizon-uv.y)*1.1;
 
-    vec3 sand = mix(
-        vec3(0.39, 0.34, 0.28),
-        vec3(0.17, 0.22, 0.25),
-        smoothstep(sandEdge - 0.12, sandEdge + 0.1, uv.x)
-    );
+  vec3 sand=mix(
+    vec3(0.32,0.25,0.19),
+    vec3(0.12,0.16,0.17),
+    smoothstep(0.0,0.8,uv.y)
+  );
 
-    vec3 sea = mix(
-        vec3(0.015, 0.10, 0.17),
-        vec3(0.03, 0.30, 0.34),
-        smoothstep(0.0, sandEdge, uv.x)
-    );
+  vec3 ocean=mix(
+    vec3(0.006,0.035,0.075),
+    vec3(0.015,0.17,0.22),
+    clamp((horizon-uv.y)*2.0,0.0,1.0)
+  );
 
-    vec3 col = uv.y > horizon ? sky : mix(sand, sea, step(uv.x, sandEdge));
+  vec3 col=uv.y>horizon?sky:mix(ocean,sand,step(sandLine,uv.x));
 
-    // Use the reference images when both photos have been selected.
-    if (uHasPhotos > 0.5) {
-        vec2 tuv = vec2(
-            clamp(uv.x, 0.001, 0.999),
-            clamp(1.0 - uv.y, 0.001, 0.999)
-        );
+  // Optional photos are used only when two valid images are loaded.
+  if(uHasPhotos>0.5){
+    vec2 texUv=clamp(vec2(uv.x,1.0-uv.y),vec2(0.002),vec2(0.998));
+    vec3 beach=texture(uBeach,texUv).rgb;
+    vec3 galaxy=texture(uGalaxy,texUv).rgb;
+    float skyMask=smoothstep(horizon-0.02,horizon+0.04,uv.y);
+    col=mix(col,beach,0.55);
+    col=mix(col,galaxy,skyMask*night*0.45);
+  }
 
-        vec3 beach = texture(uBeach, tuv).rgb;
-        vec3 galaxy = texture(uGalaxy, tuv).rgb;
-        float skyMask = smoothstep(horizon - 0.02, horizon + 0.03, uv.y);
+  // Stars.
+  vec2 grid=floor(uv*vec2(180.0,320.0));
+  float star=hash(grid);
+  float twinkle=0.65+0.35*sin(uTime*2.0+star*90.0);
+  if(star>0.992 && uv.y>horizon){
+    col+=vec3(0.72,0.83,1.0)*uStars*night*twinkle;
+  }
 
-        col = mix(col, beach, 0.78);
-        col = mix(col, galaxy, skyMask * night * 0.75);
-    }
+  // Moon.
+  vec2 moonPos=vec2(0.73,0.73);
+  vec2 md=(uv-moonPos)*vec2(aspect,1.0);
+  float radius=length(md);
+  float moonMask=1.0-smoothstep(0.025,0.029,radius);
 
-    // Stars, suppressed during daylight.
-    vec2 cell = floor(uv * vec2(190.0, 330.0));
-    float st = hash(cell);
+  float phaseShift=(uPhase-0.5)*0.05;
+  float lit=step(md.x,phaseShift);
+  vec3 moonColor=vec3(0.83,0.87,0.92)*(0.35+0.65*lit);
+  col=mix(col,moonColor,moonMask*night);
 
-    if (st > 0.991 && uv.y > horizon) {
-        col += vec3(0.72, 0.84, 1.0)
-            * night
-            * uStars
-            * (0.5 + 0.5 * sin(uTime * 2.0 + st * 80.0));
-    }
+  // Ocean ripples and reflected light.
+  if(water>0.5){
+    float wave=sin(uv.y*180.0+uTime*2.0+sin(uv.x*32.0)*2.0);
+    float ripple=smoothstep(0.45,0.95,wave*0.5+0.5);
+    col+=vec3(0.04,0.19,0.23)*ripple*uWaves;
 
-    // Moon with adjustable phase.
-    vec2 md = (uv - vec2(0.5, 0.72)) * vec2(aspect, 1.0);
-    float r = length(md);
+    float reflection=exp(-pow((uv.x-0.73)/(0.018+(horizon-uv.y)*0.20),2.0));
+    col+=vec3(0.62,0.69,0.60)*reflection*night*0.25*uWaves;
+  }
 
-    if (r < 0.033 && uv.y > horizon) {
-        float z = sqrt(max(0.0, 1.0 - dot(md / 0.033, md / 0.033)));
-        float lit = step(md.x, (uPhase - 0.5) * 0.065);
-        col = mix(
-            col,
-            vec3(0.78, 0.83, 0.88) * (0.35 + 0.65 * lit) * z,
-            1.0
-        );
-    }
+  // Palm trunk: boolean condition converted to a float correctly.
+  float px=(uv.x-0.82)+0.09*(uv.y-0.65);
+  float trunk=(
+    abs(px-0.025*sin((0.78-uv.y)*5.0))<0.009
+    && uv.y<0.73
+    && uv.y>0.27
+  )?1.0:0.0;
 
-    // Ocean ripples and reflected moonlight.
-    if (ocean > 0.5) {
-        float ripple = sin(
-            uv.y * 170.0 + uTime * 2.2 + sin(uv.x * 40.0) * 2.0
-        ) * 0.5 + 0.5;
+  // Palm fronds.
+  float leaves=0.0;
+  for(int i=0;i<6;i++){
+    float fi=float(i);
+    float angle=fi*0.42-1.05;
+    vec2 p=uv-vec2(0.82,0.71);
+    float curve=0.71+angle*p.x+0.10*sin(p.x*8.0+fi);
+    float distanceToLeaf=abs(p.y-curve);
+    float shape=1.0-smoothstep(0.003,0.014,distanceToLeaf);
+    float reach=step(0.0,0.20-abs(p.x));
+    leaves=max(leaves,shape*reach);
+  }
 
-        float path = exp(
-            -pow((uv.x - 0.5) / (0.018 + (horizon - uv.y) * 0.18), 2.0)
-        );
+  col=mix(col,vec3(0.004,0.012,0.015),max(trunk,leaves*0.85));
 
-        col += vec3(0.22, 0.43, 0.48) * ripple * uWaves * 0.18;
-        col += vec3(1.0, 0.78, 0.53) * path * (0.10 + 0.22 * day) * ocean;
-    }
+  // Gentle horizon glow.
+  float glow=exp(-abs(uv.y-horizon)*30.0);
+  col+=vec3(0.035,0.09,0.12)*glow;
 
-    // Palm trunk.
-    float px = (uv.x - 0.78) + 0.08 * (uv.y - 0.62);
+  // Vignette.
+  vec2 centered=uv-0.5;
+  float vignette=1.0-0.25*dot(centered,centered);
+  col*=vignette;
 
-    // FIX: GLSL requires a float value, not a boolean, for trunk.
-    float trunk = (
-        abs(px - 0.025 * sin((0.78 - uv.y) * 5.0)) < 0.009
-        && uv.y < 0.73
-        && uv.y > 0.28
-    ) ? 1.0 : 0.0;
-
-    // Palm leaves.
-    float leaves = 0.0;
-
-    for (int i = 0; i < 5; i++) {
-        float a = float(i) * 0.48 - 1.0;
-        vec2 p = uv - vec2(0.82, 0.70);
-
-        float line = abs(
-            p.y - (0.70 + a * p.x) - 0.12 * sin(p.x * 8.0 + float(i))
-        );
-
-        leaves = max(leaves, 1.0 - smoothstep(0.005, 0.018, line));
-    }
-
-    col = mix(
-        col,
-        vec3(0.008, 0.018, 0.025),
-        max(trunk, leaves * 0.75)
-    );
-
-    col = col / (1.0 + col * 0.18);
-    fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+  col=col/(1.0+col*0.2);
+  fragColor=vec4(clamp(col,0.0,1.0),1.0);
 }`;
 
-function shader(type, source) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, source);
-    gl.compileShader(s);
+function compileShader(type, source){
+  const shader=gl.createShader(type);
+  gl.shaderSource(shader,source);
+  gl.compileShader(shader);
 
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-        const msg = gl.getShaderInfoLog(s) || 'Unknown shader error';
-        gl.deleteShader(s);
-        throw new Error(msg);
-    }
-
-    return s;
+  if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS)){
+    const error=gl.getShaderInfoLog(shader)||"Unknown shader compilation error";
+    gl.deleteShader(shader);
+    throw new Error(error);
+  }
+  return shader;
 }
 
-function initGL() {
-    gl = canvas.getContext('webgl2', {
-        alpha: false,
-        antialias: false,
-        powerPreference: 'high-performance'
-    });
-
-    if (!gl) {
-        throw new Error(
-            'WebGL2 is unavailable. Update Chrome or use a browser/device with WebGL2 support.'
-        );
-    }
-
-    const vs = shader(gl.VERTEX_SHADER, vertexSource);
-    const fs = shader(gl.FRAGMENT_SHADER, fragmentSource);
-
-    program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        throw new Error('Shader link failed: ' + gl.getProgramInfoLog(program));
-    }
-
-    gl.deleteShader(vs);
-    gl.deleteShader(fs);
-    gl.useProgram(program);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-        gl.STATIC_DRAW
-    );
-
-    const loc = gl.getAttribLocation(program, 'aPosition');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    textures = [makeTexture(), makeTexture()];
-
-    gl.uniform1i(gl.getUniformLocation(program, 'uBeach'), 0);
-    gl.uniform1i(gl.getUniformLocation(program, 'uGalaxy'), 1);
+function makeTexture(){
+  const texture=gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D,texture);
+  gl.texImage2D(
+    gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,
+    new Uint8Array([12,20,35,255])
+  );
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  return texture;
 }
 
-function makeTexture() {
-    const t = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, t);
+function init(){
+  if(!gl) throw new Error("WebGL2 is not available in this browser.");
 
-    gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        1,
-        1,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        new Uint8Array([20, 30, 45, 255])
-    );
+  const vs=compileShader(gl.VERTEX_SHADER,vertexShader);
+  const fs=compileShader(gl.FRAGMENT_SHADER,fragmentShader);
 
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  program=gl.createProgram();
+  gl.attachShader(program,vs);
+  gl.attachShader(program,fs);
+  gl.linkProgram(program);
 
-    return t;
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS)){
+    throw new Error("Shader link error: "+gl.getProgramInfoLog(program));
+  }
+
+  gl.deleteShader(vs);
+  gl.deleteShader(fs);
+  gl.useProgram(program);
+
+  const buffer=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    new Float32Array([-1,-1,1,-1,-1,1,1,1]),
+    gl.STATIC_DRAW
+  );
+
+  const position=gl.getAttribLocation(program,"aPosition");
+  gl.enableVertexAttribArray(position);
+  gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
+
+  textures=[makeTexture(),makeTexture()];
+  gl.uniform1i(gl.getUniformLocation(program,"uBeach"),0);
+  gl.uniform1i(gl.getUniformLocation(program,"uGalaxy"),1);
 }
 
-function uploadImage(index, img) {
-    if (!gl || !img) return;
-
-    gl.bindTexture(gl.TEXTURE_2D, textures[index]);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-    images[index] = img;
-    imageReady = images.filter(Boolean).length;
-
-    if (imageReady === 2) {
-        setup.style.display = 'none';
-    }
+function setStatus(message){
+  $("status").textContent=message;
 }
 
-function openDB() {
-    return new Promise((resolve, reject) => {
-        if (!('indexedDB' in window)) {
-            return reject(new Error('This browser does not support photo storage.'));
-        }
-
-        const req = indexedDB.open('EternalHorizonMobile', 1);
-
-        req.onupgradeneeded = () => {
-            if (!req.result.objectStoreNames.contains('photos')) {
-                req.result.createObjectStore('photos');
-            }
-        };
-
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-    });
+function formatTime(hour){
+  const h=Math.floor(hour)%24;
+  const m=Math.floor((hour-Math.floor(hour))*60);
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
 }
 
-async function savePhoto(key, blob) {
-    const database = db || await openDB();
-    db = database;
+function render(now){
+  requestAnimationFrame(render);
+  if(failed||!gl||!program) return;
 
-    return new Promise((resolve, reject) => {
-        const tx = database.transaction('photos', 'readwrite');
-        tx.objectStore('photos').put(blob, key);
-        tx.oncomplete = resolve;
-        tx.onerror = () => reject(tx.error);
-    });
+  const quality=Number($("quality").value);
+  const ratio=Math.min(window.devicePixelRatio||1,quality);
+  const width=Math.max(1,Math.floor(innerWidth*ratio));
+  const height=Math.max(1,Math.floor(innerHeight*ratio));
+
+  if(canvas.width!==width||canvas.height!==height){
+    canvas.width=width;
+    canvas.height=height;
+  }
+
+  gl.viewport(0,0,width,height);
+  gl.useProgram(program);
+
+  const dt=lastTime?Math.min((now-lastTime)/1000,0.1):0;
+  lastTime=now;
+
+  if(!$("paused").checked){
+    elapsed+=dt*Number($("speed").value);
+  }
+
+  const date=new Date();
+  const hour=$("realTime").checked
+    ? date.getHours()+date.getMinutes()/60+date.getSeconds()/3600
+    : (Number($("time").value)+elapsed/3600)%24;
+
+  if($("realTime").checked){
+    $("timeLabel").textContent=formatTime(hour);
+  }
+
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D,textures[0]);
+  gl.activeTexture(gl.TEXTURE1);
+  gl.bindTexture(gl.TEXTURE_2D,textures[1]);
+
+  const uniform=(name,value)=>gl.uniform1f(gl.getUniformLocation(program,name),value);
+
+  gl.uniform2f(gl.getUniformLocation(program,"uResolution"),width,height);
+  uniform("uTime",elapsed);
+  uniform("uHour",hour);
+  uniform("uStars",Number($("stars").value));
+  uniform("uWaves",Number($("waves").value));
+  uniform("uPhase",Number($("phase").value));
+  uniform("uHasPhotos",photoCount===2?1:0);
+
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+
+  setStatus("Graphics: WebGL2 OK | "+width+" × "+height+" | Photos: "+photoCount+"/2");
 }
 
-async function getPhoto(key) {
-    const database = db || await openDB();
-    db = database;
+function loadImageTexture(index,file){
+  return new Promise((resolve,reject)=>{
+    const image=new Image();
+    const url=URL.createObjectURL(file);
 
-    return new Promise((resolve, reject) => {
-        const tx = database.transaction('photos', 'readonly');
-        const req = tx.objectStore('photos').get(key);
+    image.onload=()=>{
+      try{
+        gl.activeTexture(index===0?gl.TEXTURE0:gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D,textures[index]);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+        gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+        URL.revokeObjectURL(url);
+        resolve();
+      }catch(error){
+        URL.revokeObjectURL(url);
+        reject(error);
+      }
+    };
 
-        req.onsuccess = () => resolve(req.result || null);
-        req.onerror = () => reject(req.error);
-    });
+    image.onerror=()=>{
+      URL.revokeObjectURL(url);
+      reject(new Error("Could not load one of the selected images."));
+    };
+
+    image.src=url;
+  });
 }
 
-async function blobToImage(blob) {
-    return createImageBitmap(blob);
-}
-
-async function restorePhotos() {
-    try {
-        const b = await getPhoto('beach');
-        const g = await getPhoto('galaxy');
-
-        if (b && g) {
-            uploadImage(0, await blobToImage(b));
-            uploadImage(1, await blobToImage(g));
-            statusBox.textContent = 'Reference photos restored from this device.';
-        }
-    } catch (e) {
-        console.warn('Saved photos could not be restored:', e);
-    }
-}
-
-$('choosePhotos').addEventListener('click', () => photoInput.click());
-$('changePhotos').addEventListener('click', () => photoInput.click());
-
-photoInput.addEventListener('change', async () => {
-    const files = Array.from(photoInput.files || [])
-        .filter(f => f.type.startsWith('image/'));
-
-    if (files.length < 2) {
-        statusBox.textContent =
-            'Please choose two images: Night Beach first, Milky Way second.';
-        return;
-    }
-
-    try {
-        for (let i = 0; i < 2; i++) {
-            const bitmap = await createImageBitmap(files[i]);
-            uploadImage(i, bitmap);
-            await savePhoto(i === 0 ? 'beach' : 'galaxy', files[i]);
-        }
-
-        setup.style.display = 'none';
-        statusBox.textContent = 'Reference photos loaded and saved on this device.';
-    } catch (e) {
-        statusBox.textContent = 'Photo error: ' + e.message;
-    }
-
-    photoInput.value = '';
+$("start").addEventListener("click",()=>{
+  $("setup").style.display="none";
+  setStatus("Scene running.");
 });
 
-$('useGenerated').addEventListener('click', () => {
-    setup.style.display = 'none';
+$("choosePhotos").addEventListener("click",()=>$("photoInput").click());
+$("changePhotos").addEventListener("click",()=>$("photoInput").click());
+
+$("photoInput").addEventListener("change",async event=>{
+  const files=Array.from(event.target.files||[]).filter(file=>file.type.startsWith("image/"));
+
+  if(files.length<2){
+    setStatus("Choose two images: beach first, Milky Way second.");
+    return;
+  }
+
+  try{
+    await loadImageTexture(0,files[0]);
+    await loadImageTexture(1,files[1]);
+    photoCount=2;
+    $("setup").style.display="none";
+    setStatus("Both reference photos loaded.");
+  }catch(error){
+    setStatus("Photo error: "+error.message);
+  }
+
+  event.target.value="";
 });
 
-canvas.addEventListener('pointerdown', () => {
-    const now = performance.now();
-
-    if (now - lastTap < 330) {
-        panel.classList.toggle('open');
-    }
-
-    lastTap = now;
+$("stars").addEventListener("input",e=>{
+  $("starsLabel").textContent=Number(e.target.value).toFixed(1);
+});
+$("waves").addEventListener("input",e=>{
+  $("wavesLabel").textContent=Number(e.target.value).toFixed(1);
+});
+$("phase").addEventListener("input",e=>{
+  $("phaseLabel").textContent=Number(e.target.value).toFixed(2);
+});
+$("speed").addEventListener("input",e=>{
+  $("speedLabel").textContent=Number(e.target.value).toFixed(1)+"×";
+});
+$("time").addEventListener("input",e=>{
+  $("timeLabel").textContent=formatTime(Number(e.target.value));
 });
 
-$('panel').addEventListener('pointerdown', e => e.stopPropagation());
-
-$('stars').addEventListener('input', e => {
-    $('starsLabel').textContent = Number(e.target.value).toFixed(1);
+let lastTap=0;
+canvas.addEventListener("pointerup",()=>{
+  const now=performance.now();
+  if(now-lastTap<350){
+    $("panel").classList.toggle("open");
+  }
+  lastTap=now;
 });
 
-$('waves').addEventListener('input', e => {
-    $('wavesLabel').textContent = Number(e.target.value).toFixed(1);
+$("panel").addEventListener("pointerup",event=>event.stopPropagation());
+
+canvas.addEventListener("webglcontextlost",event=>{
+  event.preventDefault();
+  failed=true;
+  setStatus("Graphics context lost. Reload the page.");
 });
 
-$('time').addEventListener('input', e => {
-    $('timeLabel').textContent = formatTime(Number(e.target.value));
-});
-
-$('speed').addEventListener('input', e => {
-    $('speedLabel').textContent = e.target.value + '×';
-});
-
-$('phase').addEventListener('input', e => {
-    $('phaseLabel').textContent = Number(e.target.value).toFixed(2);
-});
-
-function formatTime(h) {
-    return String(Math.floor(h)).padStart(2, '0') + ':' +
-        String(Math.floor((h % 1) * 60)).padStart(2, '0');
+try{
+  init();
+  setStatus("Graphics initialized successfully.");
+  requestAnimationFrame(render);
+}catch(error){
+  failed=true;
+  $("setup").style.display="block";
+  setStatus("Graphics initialization failed: "+error.message);
+  console.error(error);
 }
-
-function render(now) {
-    requestAnimationFrame(render);
-
-    if (failed || !gl || !program) return;
-
-    const q = Number($('quality').value);
-    const dpr = Math.min(window.devicePixelRatio || 1, q);
-    const w = Math.max(1, Math.floor(innerWidth * dpr));
-    const h = Math.max(1, Math.floor(innerHeight * dpr));
-
-    if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-    }
-
-    gl.viewport(0, 0, w, h);
-    gl.useProgram(program);
-
-    const paused = $('paused').checked;
-    const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
-    lastFrame = now;
-
-    if (!paused) {
-        elapsed += dt * Number($('speed').value);
-    }
-
-    const currentDate = new Date();
-
-    const hour = $('realTime').checked
-        ? currentDate.getHours() +
-          currentDate.getMinutes() / 60 +
-          currentDate.getSeconds() / 3600
-        : (Number($('time').value) + elapsed / 3600) % 24;
-
-    if ($('realTime').checked) {
-        $('timeLabel').textContent = formatTime(hour);
-    }
-
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, textures[0]);
-
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-
-    gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), w, h);
-    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), elapsed);
-    gl.uniform1f(gl.getUniformLocation(program, 'uHour'), hour);
-    gl.uniform1f(gl.getUniformLocation(program, 'uStars'), Number($('stars').value));
-    gl.uniform1f(gl.getUniformLocation(program, 'uWaves'), Number($('waves').value));
-    gl.uniform1f(gl.getUniformLocation(program, 'uPhase'), Number($('phase').value));
-    gl.uniform1f(gl.getUniformLocation(program, 'uHasPhotos'), imageReady === 2 ? 1 : 0);
-
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-    statusBox.textContent =
-        `Graphics: WebGL2 OK\n` +
-        `Resolution: ${w} × ${h}\n` +
-        `Photo textures: ${imageReady}/2\n` +
-        `Clock: ${formatTime(hour)}\n` +
-        `Quality scale: ${q}×`;
-}
-
-try {
-    initGL();
-    restorePhotos();
-    requestAnimationFrame(render);
-} catch (e) {
-    failed = true;
-    statusBox.textContent = 'Graphics initialization failed: ' + e.message;
-    setup.style.display = 'block';
-    console.error(e);
-}
-
-canvas.addEventListener('webglcontextlost', e => {
-    e.preventDefault();
-    failed = true;
-    statusBox.textContent = 'Graphics context lost. Reload the page to recover.';
-});
-
 })();
 </script>
 </body>
