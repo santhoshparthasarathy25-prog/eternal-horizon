@@ -219,10 +219,8 @@ vec3 renderPx(vec2 fc){
     if(hit>0.){col=sandColor(ro+rd*hit,rd);col=mix(col,hz,1.-exp(-hit*.004));}
     else{col=oceanCol(ro,rd,tw);col=mix(col,hz,1.-exp(-tw*.0028));}
   }
-  float k=clamp(asp/1.5,.4,1.);   // keep palms in proportion on portrait screens
-  col=palmLayer(q,vec2(asp*.95,-1.1),1.6*k,-.10,3.,col);
-  col=palmLayer(q,vec2(asp*.72,-1.05),1.35*k,.18,7.,col);
-  col=palmLayer(q,vec2(asp*.5,-.7),.8*k,.10,11.,col);
+  // Open horizon: no foreground palm silhouettes.
+
   return col;
 }
 vec3 aces(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}
