@@ -1,9 +1,9 @@
 {
   "name": "eternal-horizon",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
-  "description": "Live WebGL2 tropical beach wallpaper with a 24-hour cycle and tiled native 8K export. Zero runtime dependencies.",
+  "description": "Procedural WebGL natural ocean horizon with a day-to-night cycle and wallpaper export.",
   "scripts": {
     "start": "node scripts/serve.mjs .",
     "build": "node scripts/build.mjs",
