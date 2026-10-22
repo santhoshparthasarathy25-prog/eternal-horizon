@@ -1,31 +1,49 @@
-# ETERNAL HORIZON — live tropical beach wallpaper
+# Eternal Horizon — Natural Horizon
 
-Real-time WebGL2 scene (procedural sky, ocean, beach, palms, sun, moon, stars, clouds, aurora) with a continuous
-simulated 24-hour cycle and **native tiled 8K / 4K / Full-HD export**. No runtime dependencies, no API keys, no CDN.
+A real-time WebGL2 ocean-horizon scene with changing sky light, procedural clouds, sun, moon, stars, moving water and an adjustable day-to-night cycle. The foreground is kept open to emphasize the natural horizon.
 
-## Commands
+## Run locally
+
+Requires Node.js 18 or newer.
+
 ```bash
-npm start            # serve the source at http://localhost:8080/
-npm run build        # copy to dist/ and verify every relative path resolves
-npm run preview      # serve dist/ (BASE=/eternal-horizon/ npm run preview  → emulates GitHub Pages)
+npm start
 ```
-Needs Node ≥ 18 only for these helper scripts; the site itself is plain static files (any web server works).
 
-## Deploy to GitHub Pages (https://<user>.github.io/eternal-horizon/)
-1. Copy this folder's contents into the repository root (replace the old `index.html`), commit, push to `main`.
-2. Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**. The included
-   `.github/workflows/pages.yml` builds and publishes `dist/`.
-3. All URLs are relative, so the `/eternal-horizon/` sub-path works with no configuration.
+Open the local URL printed by the server. To build and preview the static deployment output:
 
-## Layout
-`src/shader.js` sky/ocean/beach/palms/moon/stars/clouds/aurora (GLSL) · `src/renderer.js` WebGL2 setup, context-loss handling ·
-`src/sun.js` sun & moon placement and time-of-day label · `src/export.js` tiled high-resolution export ·
-`src/settings.js` localStorage persistence (fails gracefully) · `src/main.js` UI, clock, quality presets, loop.
+```bash
+npm run build
+npm run preview
+```
 
-## Notes & limits
-- The cycle is a **simulated artistic** one: elevation/azimuth come from spherical astronomy (latitude + date), then are
-  compressed so the sun and moon stay in frame. It is not an ephemeris.
-- Visuals are fully procedural (no photo textures). It is a high-quality stylised-realistic render, not photographic footage.
-- Not implemented: cast shadows from palms, volumetric 3D clouds (clouds are a lit 2D noise layer), true bloom post-processing.
-- Export renders 1280×720 tiles (960×540 for 1080p) into one canvas; 8K needs ≈130 MB of canvas memory. If the device cannot
-  allocate or encode it, the app automatically tries 4K then Full HD and tells you. Output size is decoded and verified after encoding.
+No API keys or runtime package installation are required.
+
+## Controls
+
+- Follow your device's local time or choose a time manually.
+- Pause or accelerate the day/night cycle.
+- Adjust latitude and date for an approximate seasonal sun path.
+- Change rendering quality, wave intensity, cloud cover, star density and moon phase.
+- Export wallpaper at Full HD, 4K or 8K (large exports depend on available browser/GPU memory).
+
+## Deployment
+
+The GitHub Actions workflow at `.github/workflows/pages.yml` builds the site and deploys the `dist/` directory to GitHub Pages on pushes to `main`. In repository Settings → Pages, select **GitHub Actions** as the deployment source if required.
+
+## Project structure
+
+- `index.html` — website and controls
+- `src/main.js` — interface, animation and settings
+- `src/shader.js` — WebGL fragment shader for sky, clouds, sun/moon and ocean
+- `src/renderer.js` — WebGL2 renderer
+- `src/sun.js` — approximate sun/moon positioning and day labels
+- `src/export.js` — tiled wallpaper export
+- `src/settings.js` — local settings persistence
+- `src/style.css` — interface styling
+- `scripts/build.mjs` — copies and validates deployment assets
+- `scripts/serve.mjs` — local static server
+
+## Visual limitations
+
+This is procedural graphics, not nature footage or a photorealistic photograph. Cloud formations are generated from noise rather than volumetric 3D simulation, and the sun/moon paths are approximate. The result can be made more natural-looking, but true photographic realism requires further rendering work and visual testing across devices.
